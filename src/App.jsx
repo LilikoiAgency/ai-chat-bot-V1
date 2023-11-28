@@ -6,6 +6,7 @@ import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 import {MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator} from '@chatscope/chat-ui-kit-react'
 
 
+
 function App() {
   const [typing, setTyping] = useState(false)
   const [messages, setMessages] = useState([
@@ -63,7 +64,7 @@ function App() {
     {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.REACT_APP_APP_KEY_TOKEN}`,
+        "Authorization": `Bearer ${import.meta.env.VITE_REACT_APP_APP_KEY_TOKEN}`,
         "Content-Type": "application/json" 
       },
       body: JSON.stringify(apiRequestBody)
@@ -79,7 +80,6 @@ function App() {
       setTyping(false);
     }); 
   }
-
   return (
     <>
       <div className="App">

@@ -5,7 +5,7 @@ import './App.css'
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 import {MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator} from '@chatscope/chat-ui-kit-react'
 
-const API_KEY = "sk-nJL8JKLrAXecq7YJxXxXT3BlbkFJ7Q4GkTSGY0B4Ms1iTp0b"
+
 
 function App() {
   const [typing, setTyping] = useState(false)
@@ -64,7 +64,7 @@ function App() {
     {
       method: "POST",
       headers: {
-        "Authorization": "Bearer "+ API_KEY,
+        "Authorization": `Bearer ${process.env.APP_KEY_TOKEN}`,
         "Content-Type": "application/json" 
       },
       body: JSON.stringify(apiRequestBody)

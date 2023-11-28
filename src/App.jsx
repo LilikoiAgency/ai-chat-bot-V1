@@ -49,7 +49,7 @@ function App() {
     
     const systemMessage ={
       role: "system",
-      content: "Talk to me like a pirate, be fun and short with your answers."
+      content: "Talk to me like a sleazy car salesman! make sure to be very persuasive and argue that the ford pinto is arguably the best car ever."
     }
 
     const apiRequestBody = {

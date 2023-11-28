@@ -8,11 +8,13 @@ import {MainContainer, ChatContainer, MessageList, Message, MessageInput, Typing
 
 
 function App() {
+
   const [typing, setTyping] = useState(false)
+
   const [messages, setMessages] = useState([
     {
       message: "Hello world",
-      sender: "ChatGPT",
+      sender: "Gregory the great ",
 
     }
   ])
@@ -39,7 +41,7 @@ function App() {
     
     let apiMessages = chatMessages.map((messageObject) => {
       let role = "";
-      if(messageObject.sender === "ChatGPT") {
+      if(messageObject.sender === "Gregory the great ") {
         role ="assistant"
       } else{
         role = "user"
@@ -49,7 +51,7 @@ function App() {
     
     const systemMessage ={
       role: "system",
-      content: "Talk to me like a sleazy car salesman! make sure to be very persuasive and argue that the ford pinto is arguably the best car ever."
+      content: "Talk to me like a sleazy car salesman! make sure to be very persuasive and argue that the ford pinto is arguably the best car ever. make sure to keep it short and simple."
     }
 
     const apiRequestBody = {
@@ -75,18 +77,27 @@ function App() {
       console.log(data.choices[0].message.content);
       setMessages([...chatMessages, {
         message: data.choices[0].message.content,
-        sender: "ChatGPT"
+        sender: "Gregory the great "
+      }]);
+      setTyping(false);
+    }).catch((error) => {
+      console.error('Error communicating with the chatbot:', error);
+      setMessages([...chatMessages, {
+        message: 'Error communicating with the chatbot',
+        sender: "System"
       }]);
       setTyping(false);
     }); 
   }
+
+
   return (
     <>
       <div className="App">
       <div style={{position: "relative", height:"800px", width: "400px"}}>
         <MainContainer>
           <ChatContainer>
-            <MessageList typingIndicator={typing ? <TypingIndicator content="ChatGPT is typing "/> : null }>
+            <MessageList typingIndicator={typing ? <TypingIndicator content="Gregory the great is typing "/> : null }>
               {messages.map((message, i) => {
                   return <Message key={i} model={message}/>
               })}
@@ -101,6 +112,8 @@ function App() {
     </>
   )
 }
+
+
 
 export default App
  

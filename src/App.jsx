@@ -115,7 +115,7 @@ function App() {
   return (
     <>
       <div className="App">
-      <div style={{position: "relative", height:"800px", width: "400px", textAlign: 'left'}}>
+      <div style={{position: "relative", height:"800px", width: "400px", textAlign: 'left', maxWidth: "100vw", maxHeight: '100vh'}}>
         <MainContainer>
           <ChatContainer>
             <MessageList typingIndicator={typing ? <TypingIndicator content="Gregory the great is typing "/> : null }>
@@ -123,7 +123,7 @@ function App() {
                   return <Message key={i} model={message}/>
               })}
             </MessageList>
-            <MessageInput placeholder='Type Message' onSend={handleSend}/>
+            <MessageInput attachButton={false} placeholder='Type Message' onSend={handleSend}/>
           </ChatContainer>
         </MainContainer>
 

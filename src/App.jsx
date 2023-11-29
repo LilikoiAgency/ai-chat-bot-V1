@@ -7,14 +7,13 @@ import {MainContainer, ChatContainer, MessageList, Message, MessageInput, Typing
 import nlp from 'compromise';
 
 
-
 function App() {
 
   const [typing, setTyping] = useState(false)
 
   const [messages, setMessages] = useState([
     {
-      message: "Hey there, I'm Gary. If you are looking to set an appointment please click this link and <a href='https://appointment.sempersolaris.com/' target='_blank' rel='noopener noreferrer'>schedule today!</a>",
+      message: "Hey there, I'm Gregory. If you are looking to set an appointment please click this link and <a href='https://appointment.sempersolaris.com/' target='_blank' rel='noopener noreferrer'>schedule today!</a>",
       sender: "Gregory the great ",
 
     }
@@ -118,10 +117,12 @@ function App() {
       <div style={{position: "relative", height:"800px", width: "400px", textAlign: 'left', maxWidth: "100vw", maxHeight: '100vh'}}>
         <MainContainer>
           <ChatContainer>
+           
             <MessageList typingIndicator={typing ? <TypingIndicator content="Gregory the great is typing "/> : null }>
               {messages.map((message, i) => {
                   return <Message key={i} model={message}/>
               })}
+                      
             </MessageList>
             <MessageInput attachButton={false} placeholder='Type Message' onSend={handleSend}/>
           </ChatContainer>

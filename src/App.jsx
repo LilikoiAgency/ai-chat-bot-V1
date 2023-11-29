@@ -14,7 +14,7 @@ function App() {
 
   const [messages, setMessages] = useState([
     {
-      message: "Hello world",
+      message: "Hey there, I'm Gary. If you are looking to set an appointment please click this link and <a href='https://appointment.sempersolaris.com/' target='_blank' rel='noopener noreferrer'>schedule today!</a>",
       sender: "Gregory the great ",
 
     }

@@ -145,8 +145,11 @@ function App() {
       const webhookUrl = 'https://hooks.zapier.com/hooks/catch/807991/3fuqfgh/'; // Replace with your actual webhook URL
       const response = await fetch(webhookUrl, {
         method: 'POST',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'https://amazing-froyo-252e08.netlify.app',  // Replace with your actual frontend origin
+          // Add other necessary headers here
         },
         body: JSON.stringify(contactInfo),
       });

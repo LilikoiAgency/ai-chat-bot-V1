@@ -1,0 +1,72 @@
+[
+    {
+      "user": "I'm interested in Solar and battery storage",
+      "assistant": "Sure! I'd be happy to help. When would you prefer to schedule the appointment for a free solar and battery storage consultation?"
+    },
+    {
+      "user": "What days and times are available for a solar consultation?",
+      "assistant": "We have availability Monday through Friday between with the following time slots: 11am-12pm, 2:30pm - 3:30pm, and 6pm - 7pm "
+    },
+    {
+      "user": "I'll do next Monday at 11am slot",
+      "assistant": "Great! Your appointment is confirmed as follows:
+      
+      Date: 12/05/2023
+      Time: 5 pm - 6 pm 
+      
+      We are excited to meet you and if you have any questions please feel free to contact us."
+    }
+  ],
+  [
+    {
+      "user": "I'm interested in getting a solar consultation. Can we schedule an appointment?",
+      "assistant": "Sure! I'd be happy to help. When would you prefer to schedule the appointment?"
+    },
+    {
+      "user": "What days and times are available for a solar consultation?",
+      "assistant": "We have availability on weekdays from 10 am to 4 pm. Please let me know your preferred day and time."
+    },
+    {
+      "user": "I'd like to confirm my solar consultation appointment for tomorrow at 2 pm.",
+      "assistant": "Great! Your appointment for tomorrow at 2 pm is confirmed. Is there anything else you need assistance with?"
+    },
+    {
+      "user": "Something came up, and I need to reschedule my appointment. Can we do it for next week?",
+      "assistant": "Of course! Let me check the availability for next week. When would you like to reschedule?"
+    },
+    {
+      "user": "Can you provide details for my upcoming solar consultation?",
+      "assistant": "Certainly! Your solar consultation is scheduled for [Date] at [Time]. Our representative will reach out to you. Anything else you'd like to know?"
+    },
+    {
+      "user": "How does the solar consultation process work?",
+      "assistant": "During the consultation, we'll discuss your energy needs and provide information about our solar solutions. Would you like to schedule a consultation to learn more?"
+    }
+  ],
+  [
+    {
+      "user": "I'm interested in getting a solar consultation. Can we schedule an appointment?",
+      "assistant": "Sure! I'd be happy to help. When would you prefer to schedule the appointment?"
+    },
+    {
+      "user": "What days and times are available for a solar consultation?",
+      "assistant": "We have availability on weekdays from 10 am to 4 pm. Please let me know your preferred day and time."
+    },
+    {
+      "user": "I'd like to confirm my solar consultation appointment for tomorrow at 2 pm.",
+      "assistant": "Great! Your appointment for tomorrow at 2 pm is confirmed. Is there anything else you need assistance with?"
+    },
+    {
+      "user": "Something came up, and I need to reschedule my appointment. Can we do it for next week?",
+      "assistant": "Of course! Let me check the availability for next week. When would you like to reschedule?"
+    },
+    {
+      "user": "Can you provide details for my upcoming solar consultation?",
+      "assistant": "Certainly! Your solar consultation is scheduled for [Date] at [Time]. Our representative will reach out to you. Anything else you'd like to know?"
+    },
+    {
+      "user": "How does the solar consultation process work?",
+      "assistant": "During the consultation, we'll discuss your energy needs and provide information about our solar solutions. Would you like to schedule a consultation to learn more?"
+    }
+  ],
+  

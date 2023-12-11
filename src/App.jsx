@@ -1,12 +1,8 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css' 
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 import {MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator} from '@chatscope/chat-ui-kit-react'
 import nlp from 'compromise';
-import AppointmentForm from './components/AppointmentForm'
-
 
 
 
@@ -38,8 +34,17 @@ function App() {
     // process messages
     await processMessageToChatGpt(newMessages);
   }
+
+  function getCurrentDateFormatted() {
+    const options = { month: 'long', day: 'numeric', year: 'numeric' };
+    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(new Date());
+    return formattedDate;
+  }
+  
+  const currentDate = getCurrentDateFormatted();
+  console.log(currentDate); 
 //
-  async function processMessageToChatGpt(chatMessages) {
+  async function processMessageToChatGpt(chatMessages, currentDate) {
     try {
       const apiMessages = chatMessages.map((messageObject) => {
         const role = messageObject.sender === "Gregory the great" ? "assistant" : "user";
@@ -59,9 +64,11 @@ function App() {
         return;
       }
 
+      
+
       const systemMessage = {
         role: "system",
-        content: "Your name is Gregory, a semper solaris employee who is friendly and nice! you are short and accurate with your responses and you are always looking to help educate people on how solar can help them save money and become energy independent. You want them to book an appointment, also once a user provides you with there name, email, and phone number please reiterate it back in this format: Name: , Email: , Phone: . but only if you have all the informmation at once. Make sure you do not tell them you will reiterate back just sound natural but tell them to confirm it is correct"
+        content: `Today is ${currentDate}, Your name is Gregory, a semper solaris assistant bot who is friendly and nice! you are short and accurate with your responses and you are always looking to help educate people on how solar can help them save money and become energy independent. You want them to book an appointment with a date and time that is monday-friday between the hours of 11am - 7pm and make sure you let them know it'll be a 1 hour slot ex: you are scheduled December 12th 2023 from 1pm-2pm, also once a user provides you with there name, email, and phone number please reiterate it back in this format: Name: , Email: , Phone: ,Date: MM/DD/YY, Time: . but only if you have all the informmation at once. Make sure you do not tell them you will reiterate back just sound natural but tell them to confirm it is correct, don't forget to schedule them for am appointment`
       };
   
       const apiRequestBody = {
@@ -114,23 +121,31 @@ function App() {
   }
 
   function extractContactInfoMatch(userMessage) {
-    // Define a regex pattern to match contact information
-    const contactInfoPattern = /name:\s*([\w\s]+),\s*email:\s*([\w._%+-]+@[\w.-]+\.[a-zA-Z]{2,})\s*,\s*phone:\s*([\d\s-]+)/i;
+    // Define a regex pattern to match contact information, date, and time
+    const contactInfoPattern = /name:\s*([\w\s]+),\s*email:\s*([\w._%+-]+@[\w.-]+\.[a-zA-Z]{2,})\s*,\s*phone:\s*([\d\s-]+),\s*date:\s*([\w\s]+),\s*time:\s*([\w:]+)\./i;
     return userMessage.match(contactInfoPattern);
   }
 
   function containsContactInfo(botMessage) {
     // Regular expression to match the contact information
-    const regex = /Name:\s*([\w\s]+)\s*Email:\s*([\w._%+-]+@[\w.-]+\.[a-zA-Z]{2,})\s*Phone:\s*([\d\s-]+)/i;
+    const regex = /Name:(.*?)(?:\n|$).*?Email:(.*?)(?:\n|$).*?Phone:(.*?)(?:\n|$).*?Date:(.*?)(?:\n|$).*?Time:(.*?)(?:\n|$)/i;
+    
   
     // Attempt to match the regular expression
     const match = botMessage.match(regex);
-  
+    console.log('Message:', botMessage);
+    console.log('Match:', match);
     // Check if there's a match
     if (match) {
-      const [, name, email, phone] = match; 
-      const contactInfo = { name, email, phone };
-      console.log('Contact Information:', { name, email, phone });
+      const [, name, email, phone, date, time] = match; // Destructure the matched groups
+      name.replace(/\n/g, '').trim();
+      email.replace(/\n/g, '').trim();
+      phone.replace(/\n/g, '').trim();
+      date.replace(/\n/g, '').trim();
+      time.replace(/\n/g, '').trim();
+      
+      const contactInfo = { name, email, phone, date, time };
+      console.log('Contact Information:', {contactInfo });
       postToWebhook(contactInfo);
       return true;
     }
@@ -142,15 +157,10 @@ function App() {
 
   async function postToWebhook(contactInfo) {
     try {
-      const webhookUrl = 'https://hooks.zapier.com/hooks/catch/807991/3fuqfgh/'; // Replace with your actual webhook URL
+      const webhookUrl = 'https://hooks.zapier.com/hooks/catch/807991/3fuqflw/'; // Replace with your actual webhook URL
       const response = await fetch(webhookUrl, {
         method: 'POST',
         mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': 'https://amazing-froyo-252e08.netlify.app',  // Replace with your actual frontend origin
-          // Add other necessary headers here
-        },
         body: JSON.stringify(contactInfo),
       });
   

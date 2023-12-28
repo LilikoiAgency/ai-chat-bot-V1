@@ -90,7 +90,7 @@ function App() {
       console.log(data.choices[0].message.content);
       const botMessageContent = data.choices[0].message.content;
       containsContactInfo(botMessageContent);
-      setMessages([...chatMessages, { message: botMessageContent, sender: "Gregory the great" }]);
+      setMessages([...chatMessages, { message: botMessageContent, sender: "Alex" }]);
       setTyping(false);
     } catch (error) {
       console.error('Error communicating with the chatbot:', error);
@@ -203,7 +203,7 @@ function App() {
         <MainContainer>
           <ChatContainer>
            
-            <MessageList typingIndicator={typing ? <TypingIndicator content="Gregory the great is typing "/> : null }>
+            <MessageList typingIndicator={typing ? <TypingIndicator content="Alex"/> : null }>
               {messages.map((message, i) => {
                   return <Message key={i} model={message} content={message.message}/>
               })}

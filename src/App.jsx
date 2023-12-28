@@ -12,8 +12,8 @@ function App() {
   const [typing, setTyping] = useState(false);
   const [messages, setMessages] = useState([
     {
-      message: "Hey there, I'm Gregory. If you are looking to set an appointment please click this link and <a href='https://appointment.sempersolaris.com/' target='_blank' rel='noopener noreferrer'>schedule today!</a>",
-      sender: "Gregory the great",
+      message: "Hi, I'm Alex, your friendly Appointment Assistant! 😊 Ready to book your appointment? We have availability Monday - Friday anytime between 11am and 7pm.  Please share your preferred date and time. Let's secure your appointment today! 🗓️🕒",
+      sender: "Alex",
     }
   ])
 
@@ -31,18 +31,18 @@ function App() {
     // typing indecator
     setTyping(true);
 
+    function getCurrentDateFormatted() {
+      const options = { month: 'long', day: 'numeric', year: 'numeric' };
+      const formattedDate = new Intl.DateTimeFormat('en-US', options).format(new Date());
+      return formattedDate;
+    }
+    
+    const currentDate = getCurrentDateFormatted();
     // process messages
-    await processMessageToChatGpt(newMessages);
+    await processMessageToChatGpt(newMessages, currentDate);
   }
 
-  function getCurrentDateFormatted() {
-    const options = { month: 'long', day: 'numeric', year: 'numeric' };
-    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(new Date());
-    return formattedDate;
-  }
-  
-  const currentDate = getCurrentDateFormatted();
-  console.log(currentDate); 
+ 
 //
   async function processMessageToChatGpt(chatMessages, currentDate) {
     try {
@@ -64,15 +64,15 @@ function App() {
         return;
       }
 
-      
+      console.log('todays date is:', currentDate);
 
       const systemMessage = {
         role: "system",
-        content: `Today is ${currentDate}, Your name is Gregory, a semper solaris assistant bot who is friendly and nice! you are short and accurate with your responses and you are always looking to help educate people on how solar can help them save money and become energy independent. You want them to book an appointment with a date and time that is monday-friday between the hours of 11am - 7pm and make sure you let them know it'll be a 1 hour slot ex: you are scheduled December 12th 2023 from 1pm-2pm, also once a user provides you with there name, email, and phone number please reiterate it back in this format: Name: , Email: , Phone: ,Date: MM/DD/YY, Time: . but only if you have all the informmation at once. Make sure you do not tell them you will reiterate back just sound natural but tell them to confirm it is correct, don't forget to schedule them for am appointment`
+        content: `Today's date is ${currentDate}, Your name is Alex, a Appointment setting assistant bot who is friendly and nice! You are short and accurate with your responses and you are looking to set an appointment by reaching out. You want them to book an appointment with a date and time that is monday-friday between the hours of 11am - 7pm and make sure you let them know it'll be a 1 hour slot ex: you are scheduled December 12th 2023 from 1pm-2pm, also once a user provides you with there name, email, and phone number please reiterate it back in the forllowng format Name: , Email: , Phone: ,Date: MM/DD/YY , Time:  . but only if you have all the informmation at once. Make sure you do not tell them you will reiterate back just sound natural but tell them to confirm it is correct in a seperate message.`
       };
   
       const apiRequestBody = {
-        model: "gpt-3.5-turbo",
+        model: "ft:gpt-3.5-turbo-1106:lilikoi-agency::8aXkkAuM",
         messages: [systemMessage, ...apiMessages],
       };
   
@@ -128,16 +128,34 @@ function App() {
 
   function containsContactInfo(botMessage) {
     // Regular expression to match the contact information
-    const regex = /Name:(.*?)(?:\n|$).*?Email:(.*?)(?:\n|$).*?Phone:(.*?)(?:\n|$).*?Date:(.*?)(?:\n|$).*?Time:(.*?)(?:\n|$)/i;
+    const regex = /Name:\s*(.*?),\s*Email:\s*(.*?),\s*Phone:\s*(.*?),\s*Date:\s*(.*?),\s*Time:\s*(.*?)\./i;
+    const regex2 = /Name: (.*)\nEmail: (.*)\nPhone: (.*)\nDate: (.*)\nTime: (.*)/;
+    
+
     
   
     // Attempt to match the regular expression
     const match = botMessage.match(regex);
+    const match2 = botMessage.match(regex2);
+
     console.log('Message:', botMessage);
     console.log('Match:', match);
+    console.log('Match2:', match2);
     // Check if there's a match
     if (match) {
       const [, name, email, phone, date, time] = match; // Destructure the matched groups
+      name.replace(/\n/g, '').trim();
+      email.replace(/\n/g, '').trim();
+      phone.replace(/\n/g, '').trim();
+      date.replace(/\n/g, '').trim();
+      time.replace(/\n/g, '').trim();
+      
+      const contactInfo = { name, email, phone, date, time };
+      console.log('Contact Information:', {contactInfo });
+      postToWebhook(contactInfo);
+      return true;
+    } else if (match2){
+      const [, name, email, phone, date, time] = match2; // Destructure the matched groups
       name.replace(/\n/g, '').trim();
       email.replace(/\n/g, '').trim();
       phone.replace(/\n/g, '').trim();

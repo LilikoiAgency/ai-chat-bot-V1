@@ -12,6 +12,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.App{
+  border-radius: 18px;
+  overflow: hidden;
+}
 
 a {
   font-weight: 500;
@@ -36,23 +40,44 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+  color: black;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  font-weight: bold;
 }
 button:hover {
   border-color: #646cff;
+  cursor: pointer;
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: none -webkit-focus-ring-color;
 }
+
+.cs-message__content{
+  color: black;
+  background-color: #ededed;
+}
+
+.cs-message-list{
+  height: 87%;
+}
+.cs-chat-container .cs-message-input{
+  margin-top: inherit;
+}
+
+.cs-message--outgoing .cs-message__content{
+
+  background-color: #218aff;
+  color: white;
+  border-radius: 12px; /* Set the border-radius for rounded corners */
+}
+.cs-button--send{
+  color: #218aff;
+}
+
 
 @media (prefers-color-scheme: light) {
   :root {

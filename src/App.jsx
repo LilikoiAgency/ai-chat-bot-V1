@@ -10,9 +10,18 @@ import nlp from 'compromise';
 function App() {
   const [showChat, setShowChat] = useState(() => {
     const storedValue = localStorage.getItem('showChat');
-    // If storedValue is null (first visit), default to true, else parse the stored value
-    return storedValue === null ? true : storedValue === 'true';
-  });  const [typing, setTyping] = useState(false);
+    // If storedValue is null (first visit), default to false and update localStorage
+    const initialValue = storedValue === null ? false : storedValue === 'true';
+  
+    if (storedValue === null) {
+      localStorage.setItem('showChat', 'false');
+    }
+  
+    console.log("Initial showChat state:", initialValue);
+    return initialValue;
+  });
+
+  const [typing, setTyping] = useState(false);
   const [messages, setMessages] = useState([
     {
       message: "Hi, I'm Alex, your friendly Assistant! I can help you book a meeting or answer any questions you have regarding our services!",
@@ -213,16 +222,27 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
 
   };
 
+  // useEffect(() => {
+  //   const storedValue = localStorage.getItem('showChat');
+  //   setShowChat(storedValue ? JSON.parse(storedValue) : true);
+  
+  //   const storedMessages = localStorage.getItem('chatMessages');
+  //   if (storedMessages) {
+  //     setMessages(JSON.parse(storedMessages));
+  //   }
+  // }, []);
   useEffect(() => {
+    console.log("showChat from local storage:", localStorage.getItem('showChat'));
+    console.log("Parsed showChat value:", JSON.parse(localStorage.getItem('showChat')));
+    
     const storedValue = localStorage.getItem('showChat');
     setShowChat(storedValue ? JSON.parse(storedValue) : true);
-  
+    
     const storedMessages = localStorage.getItem('chatMessages');
     if (storedMessages) {
       setMessages(JSON.parse(storedMessages));
     }
   }, []);
-
 
 
 
@@ -236,7 +256,6 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
           zIndex: "999", 
           textAlign: 'left', 
           height: "100%",
-          border: "1px solid #ccc",
           borderRadius: "15px",
           boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)", overflow: "hidden", border: "none", background: "white" }}>
           {!showChat ? (

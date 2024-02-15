@@ -16,8 +16,6 @@ function App() {
     if (storedValue === null) {
       localStorage.setItem('showChat', 'false');
     }
-  
-    console.log("Initial showChat state:", initialValue);
     return initialValue;
   });
 
@@ -80,11 +78,9 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
           return;
       }
 
-      console.log('todays date is:', currentDate);
-
       const systemMessage = {
           role: "system",
-          content: `Hey there! Today's date is ${currentDate}, and you're Alex, the friendly Appointment Setting Assistant. Please be nice and helpful to our users`
+          content: `Hello! It's ${currentDate}, and I'm Alex, your Appointment Setting Assistant. I'm here to help you schedule appointments and provide info on our chat services. Keep questions focused on appointments and chat services. If asked something random, politely guide them back to scheduling. Limit responses to 150 characters. You only know information about chatbot services and nothing else. So Do not answer questions on anything that does not involve chatbot services or an appointment for chatbots. If they want to schedule an appointment or book a meeting please give them this link: <a href="/contact-us/" target="_blank" rel="noopener noreferrer">Schedule your appointment</a>`
       };
 
       const apiRequestBody = {
@@ -102,8 +98,6 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
       });
 
       const data = await response.json();
-      console.log(data);
-      console.log(data.choices[0].message.content);
       const botMessageContent = data.choices[0].message.content;
       containsContactInfo(botMessageContent);
 
@@ -138,7 +132,7 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
 
   function generateAppointmentLink() {
     // Example: Generating a static hyperlink to www.sempersolaris.com/appointment
-    return '<a href="https://appointment.sempersolaris.com/" target="_blank" rel="noopener noreferrer">Schedule your appointment</a>';
+    return '<a href="/contact-us/" target="_blank" rel="noopener noreferrer">Schedule your appointment</a>';
   }
 
   // function extractContactInfoMatch(userMessage) {
@@ -154,10 +148,6 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
     // Attempt to match the regular expression
     const match = botMessage.match(regex);
     const match2 = botMessage.match(regex2);
-
-    console.log('Message:', botMessage);
-    console.log('Match:', match);
-    console.log('Match2:', match2);
     // Check if there's a match
     if (match) {
       const [, name, email, phone, date, time] = match; // Destructure the matched groups
@@ -250,17 +240,17 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
   return (
     <>
       <div className="App">
-        <div className="chatOutterWrapper" style={{ height: showChat ? '100%' : 'fit-content',  boxShadow: showChat ? "0 0 10px rgba(0, 0, 0, 0.2)" : "none"}}>
+        <div className="chatOutterWrapper" style={{ padding: showChat ? '0' : '5px',height: showChat ? '100%' : 'fit-content',  boxShadow: showChat ? "0 0 10px rgba(0, 0, 0, 0.2)" : "none"}}>
           {!showChat ? (
-            <button className='open-chat-button' onClick={handleOpenChat}>
-              <img style={{marginTop: 'auto', marginBottom: 'auto', borderRadius: '100%'}} width={60} height={60}  src='https://www.pngfind.com/pngs/m/126-1269385_chatbots-builder-pricing-crozdesk-chat-bot-png-transparent.png'/>
+            <button className='open-chat-button' style={{padding: '10px', backgroundColor: '#218aff', borderRadius: "100%", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'}} onClick={handleOpenChat}>
+              <img style={{marginTop: 'auto', marginBottom: 'auto'}} width={45} height={45}  src='src/assets/chatbot.png'/>
             </button>
           ) : (
             <>
-              <div style={{backgroundColor:"white", display: "flex", justifyContent: 'space-between', padding: '7px 10px'} }>
-                <img style={{marginTop: 'auto', marginBottom: 'auto'}} width={30} height={30}  src='https://cdn-icons-png.flaticon.com/512/147/147140.png'/>
+              <div style={{backgroundColor:"white", display: "flex", justifyContent: 'space-between', padding: '5px 15px', borderBottom: 'solid 1px lightgray'} }>
+                <img style={{padding: '2px',borderRadius: "100%",backgroundColor: '#218aff',marginTop: 'auto', marginBottom: 'auto'}} width={35} height={35}  src='src/assets/chatbot.png'/>
                 <button className="close-chat-button" onClick={handleCloseChat}>
-                  <span>X</span>
+                  <span>Close</span>
                 </button> 
               </div>             
               <MainContainer>

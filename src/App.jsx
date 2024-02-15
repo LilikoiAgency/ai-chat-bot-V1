@@ -243,12 +243,12 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
         <div className="chatOutterWrapper" style={{ padding: showChat ? '0' : '5px',height: showChat ? '100%' : 'fit-content',  boxShadow: showChat ? "0 0 10px rgba(0, 0, 0, 0.2)" : "none"}}>
           {!showChat ? (
             <button className='open-chat-button' style={{padding: '10px', backgroundColor: '#218aff', borderRadius: "100%", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'}} onClick={handleOpenChat}>
-              <img style={{marginTop: 'auto', marginBottom: 'auto'}} width={45} height={45}  src='src/assets/chatbot.png'/>
+              <img style={{marginTop: 'auto', marginBottom: 'auto'}} width={45} height={45}  src='/public/chatbot.png'/>
             </button>
           ) : (
             <>
               <div style={{backgroundColor:"white", display: "flex", justifyContent: 'space-between', padding: '5px 15px', borderBottom: 'solid 1px lightgray'} }>
-                <img style={{padding: '2px',borderRadius: "100%",backgroundColor: '#218aff',marginTop: 'auto', marginBottom: 'auto'}} width={35} height={35}  src='src/assets/chatbot.png'/>
+                <img style={{padding: '2px',borderRadius: "100%",backgroundColor: '#218aff',marginTop: 'auto', marginBottom: 'auto'}} width={35} height={35}  src='/public/chatbot.png'/>
                 <button className="close-chat-button" onClick={handleCloseChat}>
                   <span>Close</span>
                 </button> 

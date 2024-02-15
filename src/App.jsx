@@ -231,6 +231,7 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
   //     setMessages(JSON.parse(storedMessages));
   //   }
   // }, []);
+
   useEffect(() => {
     console.log("showChat from local storage:", localStorage.getItem('showChat'));
     console.log("Parsed showChat value:", JSON.parse(localStorage.getItem('showChat')));
@@ -249,23 +250,13 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
   return (
     <>
       <div className="App">
-        <div style={{ 
-          position: "fixed", 
-          bottom: "0px", 
-          right: "0px", 
-          zIndex: "999", 
-          textAlign: 'left', 
-          height: "100%",
-          borderRadius: "15px",
-          boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)", overflow: "hidden", border: "none", background: "white" }}>
+        <div className="chatOutterWrapper" style={{ height: showChat ? '100%' : 'fit-content',  boxShadow: showChat ? "0 0 10px rgba(0, 0, 0, 0.2)" : "none"}}>
           {!showChat ? (
             <button className='open-chat-button' onClick={handleOpenChat}>
               <img style={{marginTop: 'auto', marginBottom: 'auto', borderRadius: '100%'}} width={60} height={60}  src='https://www.pngfind.com/pngs/m/126-1269385_chatbots-builder-pricing-crozdesk-chat-bot-png-transparent.png'/>
-
             </button>
           ) : (
             <>
-            
               <div style={{backgroundColor:"white", display: "flex", justifyContent: 'space-between', padding: '7px 10px'} }>
                 <img style={{marginTop: 'auto', marginBottom: 'auto'}} width={30} height={30}  src='https://cdn-icons-png.flaticon.com/512/147/147140.png'/>
                 <button className="close-chat-button" onClick={handleCloseChat}>

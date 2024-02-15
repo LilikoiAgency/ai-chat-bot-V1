@@ -33,7 +33,7 @@ button:focus-visible {
 }
 
 .cs-message-list{
-  height: 87%;
+  height: 80%;
 }
 .cs-chat-container .cs-message-input{
   margin-top: inherit;
@@ -47,4 +47,17 @@ button:focus-visible {
 }
 .cs-button--send{
   color: #218aff;
+}
+.chatOutterWrapper {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 999;
+  text-align: left;
+  border-radius: 15px;
+  overflow: hidden;
+  border: none;
+  max-height: 500px;
+  max-width: 380px;
+  transition: height 0.3s ease, box-shadow 0.3s ease;
 }

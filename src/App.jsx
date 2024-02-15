@@ -231,12 +231,10 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
       <div className="App">
         <div style={{ 
           position: "fixed", 
-          bottom: "20px", 
-          right: "20px", 
+          bottom: "0px", 
+          right: "0px", 
           zIndex: "999", 
-          maxWidth: "400px", 
           textAlign: 'left', 
-          maxHeight: showChat ? '800px' : '60px',
           height: "100%",
           border: "1px solid #ccc",
           borderRadius: "15px",

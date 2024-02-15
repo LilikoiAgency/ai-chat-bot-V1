@@ -229,7 +229,18 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
   return (
     <>
       <div className="App">
-        <div style={{ position: "relative", height: "800px", width: "400px", textAlign: 'left', maxWidth: "100vw", maxHeight: '100vh' }}>
+        <div style={{ 
+          position: "fixed", 
+          bottom: "20px", 
+          right: "20px", 
+          zIndex: "999", 
+          maxWidth: "400px", 
+          textAlign: 'left', 
+          maxHeight: showChat ? '800px' : '60px',
+          height: "100%",
+          border: "1px solid #ccc",
+          borderRadius: "15px",
+          boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)", overflow: "hidden", border: "none", background: "white" }}>
           {!showChat ? (
             <button className='open-chat-button' onClick={handleOpenChat}>
               <img style={{marginTop: 'auto', marginBottom: 'auto', borderRadius: '100%'}} width={60} height={60}  src='https://www.pngfind.com/pngs/m/126-1269385_chatbots-builder-pricing-crozdesk-chat-bot-png-transparent.png'/>

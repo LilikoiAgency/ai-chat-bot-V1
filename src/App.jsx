@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react'
+import InquiryForm from './components/InquiryForm';
 import './App.css' 
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
-import {MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator} from '@chatscope/chat-ui-kit-react'
+import {MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, Button} from '@chatscope/chat-ui-kit-react'
 import nlp from 'compromise';
 
 
 
 
 function App() {
+  const [showInquiryForm, setShowInquiryForm] = useState(false);
   const [showChat, setShowChat] = useState(() => {
     const storedValue = localStorage.getItem('showChat');
     // If storedValue is null (first visit), default to false and update localStorage
@@ -55,8 +57,6 @@ function App() {
     await processMessageToChatGpt(newMessages, currentDate);
   }
 
- 
-//
   // async function processMessageToChatGpt(chatMessages, currentDate) {
 async function processMessageToChatGpt(chatMessages, currentDate) {
   try {
@@ -80,7 +80,7 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
 
       const systemMessage = {
           role: "system",
-          content: `Hello! It's ${currentDate}, and I'm Alex, your Appointment Setting Assistant. I'm here to help you schedule appointments and provide info on our chat services. Keep questions focused on appointments and chat services. If asked something random, politely guide them back to scheduling. Limit responses to 150 characters. You only know information about chatbot services and nothing else. So Do not answer questions on anything that does not involve chatbot services or an appointment for chatbots. If they want to schedule an appointment or book a meeting please give them this link: <a href="/contact-us/" target="_blank" rel="noopener noreferrer">Schedule your appointment</a>`
+          content: `It's ${currentDate}, You are Alex the friendly neighborhood AI Assistan . I'm here to help you schedule appointments and provide info on our chat services. Keep questions focused on appointments and chat services. If asked something random, politely guide them back to scheduling. Limit responses to 150 characters. You only know information about chatbot services and nothing else. So Do not answer questions on anything that does not involve chatbot services or an appointment for chatbots. If they want to schedule an appointment or book a meeting please give them this link: <a href="/contact-us/" >Schedule your appointment</a>`
       };
 
       const apiRequestBody = {
@@ -108,7 +108,6 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
       setMessages(messagesWithBot);
       setTyping(false);
   } catch (error) {
-      console.error('Error communicating with the chatbot:', error);
       setMessages([...chatMessages, {
           message: 'Error communicating with the chatbot',
           sender: "System"
@@ -131,15 +130,9 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
   }
 
   function generateAppointmentLink() {
-    // Example: Generating a static hyperlink to www.sempersolaris.com/appointment
-    return '<a href="/contact-us/" target="_blank" rel="noopener noreferrer">Schedule your appointment</a>';
+    // Example: This is where the link is generated
+    return '<a href="/contact-us/" target="_blank" rel="noopener">Schedule your appointment</a>';
   }
-
-  // function extractContactInfoMatch(userMessage) {
-  //   // Define a regex pattern to match contact information, date, and time
-  //   const contactInfoPattern = /name:\s*([\w\s]+),\s*email:\s*([\w._%+-]+@[\w.-]+\.[a-zA-Z]{2,})\s*,\s*phone:\s*([\d\s-]+),\s*date:\s*([\w\s]+),\s*time:\s*([\w:]+)\./i;
-  //   return userMessage.match(contactInfoPattern);
-  // }
 
   function containsContactInfo(botMessage) {
     // Regular expression to match the contact information
@@ -158,7 +151,6 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
       time.replace(/\n/g, '').trim();
       
       const contactInfo = { name, email, phone, date, time };
-      console.log('Contact Information:', {contactInfo });
       postToWebhook(contactInfo);
       return true;
     } else if (match2){
@@ -170,13 +162,10 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
       time.replace(/\n/g, '').trim();
       
       const contactInfo = { name, email, phone, date, time };
-      console.log('Contact Information:', {contactInfo });
       postToWebhook(contactInfo);
       return true;
     }
-    
     // No match found
-    console.log("no match")
     return false;
   }
 
@@ -197,10 +186,8 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
     // } catch (error) {
     //   console.error('Error posting to webhook:', error, JSON.stringify(contactInfo));
     // }
-
-    console.error('postToWebhook function ran', JSON.stringify(contactInfo));
-
   }
+
   const handleCloseChat = () => {
     setShowChat(false);
     localStorage.setItem('showChat', 'false');
@@ -209,65 +196,119 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
   const handleOpenChat = () => {
     setShowChat(true);
     localStorage.setItem('showChat', 'true');
-
   };
 
-  // useEffect(() => {
-  //   const storedValue = localStorage.getItem('showChat');
-  //   setShowChat(storedValue ? JSON.parse(storedValue) : true);
-  
-  //   const storedMessages = localStorage.getItem('chatMessages');
-  //   if (storedMessages) {
-  //     setMessages(JSON.parse(storedMessages));
-  //   }
-  // }, []);
+  const toggleInquiryForm = () => {
+    setShowInquiryForm((prev) => !prev);
+  };
 
+  
+  const presetMessages = [
+    "Book appointment",
+    "Submit Inquiry"
+  ];
+
+  const initialShowPresetMessages = sessionStorage.getItem('showPresetMessages') !== 'false';
+  const [showPresetMessages, setShowPresetMessages] = useState(initialShowPresetMessages);
+
+  const handlePresetMessageClick = (presetMessage) => {
+
+    if (presetMessage === 'Submit Inquiry') {
+      toggleInquiryForm();
+    } else {
+      handleSend(presetMessage);
+    }
+    // Update the showPresetMessages state to remove the clicked message
+    setShowPresetMessages(false);
+  
+    // Use sessionStorage to store the updated value of showPresetMessages
+    sessionStorage.setItem('showPresetMessages', JSON.stringify(false));
+  };
+  
+  const renderPresetMessages = () => {
+    return showPresetMessages ? (
+      <div className="preset-holder">
+        {presetMessages.map((presetMessage, index) => (
+          <button key={index} onClick={() => handlePresetMessageClick(presetMessage)}>
+            {presetMessage}
+          </button>
+        ))}
+      </div>
+    ) : null;
+  };
   useEffect(() => {
-    console.log("showChat from local storage:", localStorage.getItem('showChat'));
-    console.log("Parsed showChat value:", JSON.parse(localStorage.getItem('showChat')));
-    
     const storedValue = localStorage.getItem('showChat');
     setShowChat(storedValue ? JSON.parse(storedValue) : true);
-    
+  
     const storedMessages = localStorage.getItem('chatMessages');
     if (storedMessages) {
       setMessages(JSON.parse(storedMessages));
     }
+  
+    // Retrieve the initialShowPresetMessages value from sessionStorage
+    const initialShowPresetMessages = sessionStorage.getItem('showPresetMessages');
+  
+    // Set showPresetMessages to false if it's not found in sessionStorage
+    setShowPresetMessages(initialShowPresetMessages ? JSON.parse(initialShowPresetMessages) : []);
   }, []);
-
 
 
   return (
     <>
-      <div className="App">
-        <div className="chatOutterWrapper" style={{ padding: showChat ? '0' : '5px',height: showChat ? '100%' : 'fit-content',  boxShadow: showChat ? "0 0 10px rgba(0, 0, 0, 0.2)" : "none"}}>
-          {!showChat ? (
-            <button className='open-chat-button' style={{padding: '10px', backgroundColor: '#218aff', borderRadius: "100%", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'}} onClick={handleOpenChat}>
-              <img style={{marginTop: 'auto', marginBottom: 'auto'}} width={45} height={45}  src='https://amazing-froyo-252e08.netlify.app/chatbot.png'/>
-            </button>
-          ) : (
+    <div className="App">
+      <div className="chatOutterWrapper" style={{ padding: showChat ? '0' : '5px', height: showChat ? '100%' : 'fit-content', boxShadow: showChat ? "0 0 10px rgba(0, 0, 0, 0.2)" : "none" }}>
+
+        {!showChat ? (
+          <button className='open-chat-button' style={{ padding: '10px', backgroundColor: '#218aff', borderRadius: "100%", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }} onClick={handleOpenChat}>
+            <img style={{ marginTop: 'auto', marginBottom: 'auto' }} width={45} height={45} src='https://amazing-froyo-252e08.netlify.app/chatbot.png' />
+          </button>
+        ) : (
+          <>
+          {showInquiryForm ? (
             <>
-              <div style={{backgroundColor:"white", display: "flex", justifyContent: 'space-between', padding: '5px 15px', borderBottom: 'solid 1px lightgray'} }>
-                <img style={{padding: '2px',borderRadius: "100%",backgroundColor: '#218aff',marginTop: 'auto', marginBottom: 'auto'}} width={35} height={35}  src='https://amazing-froyo-252e08.netlify.app/chatbot.png'/>
+              <div style={{ backgroundColor: "white", display: "flex", justifyContent: 'space-between', padding: '5px 15px', borderBottom: 'solid 1px lightgray' }}>
+                <img style={{ padding: '2px', borderRadius: "100%", backgroundColor: '#218aff', marginTop: 'auto', marginBottom: 'auto' }} width={35} height={35} src='https://amazing-froyo-252e08.netlify.app/chatbot.png' />
                 <button className="close-chat-button" onClick={handleCloseChat}>
                   <span>Close</span>
-                </button> 
-              </div>             
+                </button>
+              </div>
+              <InquiryForm onCloseForm={toggleInquiryForm} />
+            </>
+          ) : (
+            <div style={{ backgroundColor: "white", display: "flex", justifyContent: 'space-between', padding: '5px 15px', borderBottom: 'solid 1px lightgray' }}>
+              <img style={{ padding: '2px', borderRadius: "100%", backgroundColor: '#218aff', marginTop: 'auto', marginBottom: 'auto' }} width={35} height={35} src='https://amazing-froyo-252e08.netlify.app/chatbot.png' />
+              <button className="close-chat-button" onClick={handleCloseChat}>
+                <span>Close</span>
+              </button>
+            </div>
+          )}
+
+            {!showInquiryForm && (
               <MainContainer>
                 <ChatContainer>
-                  <MessageList typingIndicator={typing ? <TypingIndicator content="Alex" /> : null}>
+                  <MessageList typingIndicator={typing ? <TypingIndicator content="Alex AI Assistant" /> : null}>
                     {messages.map((message, i) => (
                       <Message key={i} model={message} content={message.message} />
                     ))}
                   </MessageList>
-                  <MessageInput attachButton={false} placeholder='Type Message' onSend={handleSend} />
+                  <div as={MessageInput} style={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}>
+                    <div className='preset-holder' >
+                      {renderPresetMessages()}
+                    </div>
+                    <MessageInput attachButton={false} placeholder='Type Message' onSend={handleSend} />
+                  </div>
+
                 </ChatContainer>
               </MainContainer>
-            </>
-          )}
-        </div>
+            )}
+          </>
+        )}
       </div>
-    </>
+    </div>
+  </>
   )
 }
 

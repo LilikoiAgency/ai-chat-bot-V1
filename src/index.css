@@ -61,6 +61,86 @@ button:focus-visible {
   max-width: 380px;
   transition: height 0.3s ease, box-shadow 0.3s ease;
 }
+.cs-message-list .cs-message.cs-message--outgoing{
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
 .cs-main-container{
   border: none;
+}
+.preset-holder{
+  padding-left: 8px;
+  display: flex;
+}
+
+.preset-holder button{
+  height: max-content;
+  margin-right: 5px;
+  z-index: 1;
+  margin-top: -35px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: white;
+  border-radius: 15px;
+  padding: 4px 10px;
+  border: solid 1px rgb(33,138,255);
+  color: #218aff;
+}
+
+
+.chat-bot-ai-form-container  h2{
+  font-size: 20px;
+  /* text-align: center; */
+}
+
+.chat-bot-ai-form-container{
+  padding: 20px;
+  width: 340px;
+  font-family: sans-serif;
+}
+.chat-bot-ai-form-container form{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+}
+.chat-bot-ai-form-container form input{
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid gray;
+  outline: none;
+  background-color: rgba(0, 0, 0, 0.05);
+ 
+  }
+.chat-bot-ai-form-container form textarea{
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid gray;
+  outline: none;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.chat-bot-ai-form-container .fm-cl-btn{
+  text-align: center;
+}
+.chat-bot-ai-form-container .fm-cl-btn .close-btn-chat-ai{
+  font-size: 12px;
+  text-decoration: underline;
+  color: #218aff;
+}
+
+.chat-bot-ai-form-container form .form-sbt-btn{
+  background-color: #218aff;
+  padding: 10px;
+  border-radius: 10px;
+  color: white;
+  font-size: 20px;
+}
+
+.disclaimer-chat-ai-p{
+  font-size: 10px;;
 }

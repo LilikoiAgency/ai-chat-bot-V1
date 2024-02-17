@@ -97,6 +97,11 @@ button:focus-visible {
   padding: 20px;
   width: 340px;
   font-family: sans-serif;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.322);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+
 }
 .chat-bot-ai-form-container form{
   display: flex;

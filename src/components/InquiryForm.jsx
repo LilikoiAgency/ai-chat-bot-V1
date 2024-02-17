@@ -2,33 +2,37 @@
 import React, { useState } from 'react';
 
 
-const InquiryForm = ({ onCloseForm }) => {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    phoneNumber: '',
-    email: '',
-    message: '',
-  });
+const InquiryForm = ({ onCloseForm, onChatClosed  }) => {
+    const [formData, setFormData] = useState({
+        fullName: '',
+        phoneNumber: '',
+        email: '',
+        message: '',
+        });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
+        const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    // You can add your form submission logic here
-    console.log('Form submitted:', formData);
+        const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
+        };
 
-    // Redirect to thank you page with query parameters
-    const queryParams = new URLSearchParams(formData).toString();
-    window.location.href = `/thank-you?${queryParams}`;
+        const handleSubmit = (e) => {
+        e.preventDefault();
 
-    // Close the form after submission
-    onCloseForm();
-  };
+        // You can add your form submission logic here
+        console.log('Form submitted:', formData);
 
+        // Redirect to thank you page with query parameters
+        const queryParams = new URLSearchParams(formData).toString();
+        window.location.href = `/thank-you?${queryParams}`;
+
+        // Close the form after submission
+        setFormSubmitted(true);
+        onCloseForm();
+        onChatClosed();
+      
+        };
 
   return (
     <div className="chat-bot-ai-form-container">

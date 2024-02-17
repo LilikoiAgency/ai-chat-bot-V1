@@ -272,7 +272,7 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
                   <span>Close</span>
                 </button>
               </div>
-              <InquiryForm onCloseForm={toggleInquiryForm} />
+              <InquiryForm onCloseForm={toggleInquiryForm} onChatClosed={handleCloseChat} />
             </>
           ) : (
             <div style={{ backgroundColor: "white", display: "flex", justifyContent: 'space-between', padding: '5px 15px', borderBottom: 'solid 1px lightgray' }}>

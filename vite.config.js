@@ -15,6 +15,9 @@ export default defineConfig({
           // Exclude _headers from the chunk
           '_headers': [],
         },
+        entryFileNames: 'assets/index.js',
+        chunkFileNames: 'assets/index.js',
+        assetFileNames: 'assets/[name].[ext]',
       },
     },
   },

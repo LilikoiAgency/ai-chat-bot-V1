@@ -53,7 +53,7 @@ button:focus-visible {
   position: fixed;
   bottom: 10px;
   right: 10px;
-  z-index: 999;
+  z-index: 9999;
   text-align: left;
   border-radius: 15px;
   overflow: hidden;

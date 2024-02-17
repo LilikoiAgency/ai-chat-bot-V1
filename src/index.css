@@ -160,12 +160,10 @@ button:focus-visible {
   bottom: 72px;
   right: 80px;
   cursor: pointer;
-  font-weight: bold;
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;
   font-size: 14px;
-
 }
 .chat-bubble-welcome-message:after{
   content: "";
@@ -231,9 +229,7 @@ button:focus-visible {
   }
 }
 
-
-
-@media (max-width: 400px) {
+@media (max-width: 450px) {
   .chatOutterWrapper.mobile-chat{
     top: 0;
     right: 0;
@@ -241,7 +237,7 @@ button:focus-visible {
     margin: 10px;
   }
   .chat-bot-ai-form-container{
-    width: 90%;
+    width: inherit;
     margin: auto;
   }
 }

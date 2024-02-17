@@ -2,7 +2,6 @@
   border-radius: 18px;
   overflow: hidden;
   font-family: sans-serif;
-
 }
 a {
   font-weight: 500;
@@ -92,7 +91,6 @@ button:focus-visible {
 
 .chat-bot-ai-form-container  h2{
   font-size: 20px;
-  /* text-align: center; */
 }
 
 .chat-bot-ai-form-container{
@@ -100,7 +98,7 @@ button:focus-visible {
   width: 340px;
   font-family: sans-serif;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.322);
+  background-color: rgba(255, 255, 255, 0.8);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 
@@ -166,30 +164,20 @@ button:focus-visible {
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;
-
-}
-.chat-bubble-welcome-message:before{
-  content: "";
-  position: absolute;
-  z-index: 0;
-  bottom: 0;
-  right: -8px;
-  height: 20px;
-  width: 20px;
-  background: rgb(240, 240, 240);
-  border-bottom-left-radius: 15px;
+  font-size: 14px;
 
 }
 .chat-bubble-welcome-message:after{
   content: "";
   position: absolute;
   z-index: 1;
-  bottom: 0;
-  right: -10px;
+  bottom: -4px;
+  right: 0px;
   width: 10px;
   height: 20px;
-  background: white;
-  border-bottom-left-radius: 10px;
+  background: rgb(240, 240, 240);
+  border-bottom-left-radius: 15px;
+  
 
 }
 .chat-bubble-welcome-message.show {
@@ -243,3 +231,17 @@ button:focus-visible {
   }
 }
 
+
+
+@media (max-width: 400px) {
+  .chatOutterWrapper.mobile-chat{
+    top: 0;
+    right: 0;
+    left: 0;
+    margin: 10px;
+  }
+  .chat-bot-ai-form-container{
+    width: 90%;
+    margin: auto;
+  }
+}

@@ -284,15 +284,11 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
     }
   }, []);
    
-  
-
-  
-
 
   return (
     <>
     <div className="App">
-      <div className="chatOutterWrapper" style={{ padding: showChat ? '0' : '5px', height: showChat ? '100%' : 'fit-content', boxShadow: showChat ? "0 0 10px rgba(0, 0, 0, 0.2)" : "none" }}>
+      <div className={`chatOutterWrapper ${showChat ? 'mobile-chat' : ''}`} style={{ padding: showChat ? '0' : '5px', height: showChat ? '100%' : 'fit-content', boxShadow: showChat ? "0 0 10px rgba(0, 0, 0, 0.2)" : "none" }}>
 
         {!showChat ? (
           <> 

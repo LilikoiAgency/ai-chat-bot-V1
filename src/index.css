@@ -3,15 +3,15 @@
   overflow: hidden;
   font-family: sans-serif;
 }
-a {
+.chatOutterWrapper a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
-a:hover {
+.chatOutterWrapper a:hover {
   color: #535bf2;
 }
-button {
+.chatOutterWrapper button {
   color: black;
   background: none;
   border: none;
@@ -19,12 +19,12 @@ button {
   font-size: 16px;
   font-weight: bold;
 }
-button:hover {
+.chatOutterWrapper button:hover {
   border-color: #646cff;
   cursor: pointer;
 }
-button:focus,
-button:focus-visible {
+.chatOutterWrapper button:focus,
+.chatOutterWrapper button:focus-visible {
   outline: none -webkit-focus-ring-color;
 }
 

@@ -195,7 +195,9 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
 
   const handleOpenChat = () => {
     setShowChat(true);
+    setShowChatBubble(false);
     localStorage.setItem('showChat', 'true');
+    localStorage.setItem('chatBubbleOpened', 'true');
   };
 
   const toggleInquiryForm = () => {
@@ -252,6 +254,40 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
     setShowPresetMessages(initialShowPresetMessages ? JSON.parse(initialShowPresetMessages) : []);
   }, []);
 
+  
+  const [showChatBubble, setShowChatBubble] = useState(false);
+  const [showTypingIndicator, setShowTypingIndicator] = useState(false);
+
+  useEffect(() => {
+    // Check if the chat bubble has been opened during this session
+    const hasBubbleBeenOpened = localStorage.getItem('chatBubbleOpened');
+    
+    // Check if the typing animation has been shown during this session
+    const hasTypingAnimationBeenShown = sessionStorage.getItem('typingAnimationShown');
+
+    // If the bubble hasn't been opened and the typing animation hasn't been shown, proceed
+    if (!hasBubbleBeenOpened && !hasTypingAnimationBeenShown) {
+      const timeoutId = setTimeout(() => {
+        setShowChatBubble(true);
+        setShowTypingIndicator(true);
+
+        const typingIndicatorTimeout = setTimeout(() => {
+          setShowTypingIndicator(false);
+          sessionStorage.setItem('typingAnimationShown', 'true');
+        }, 1500);
+
+        return () => clearTimeout(typingIndicatorTimeout);
+      }, 3000);
+
+      // Clear the timeout to prevent showing the chat bubble if the component is unmounted
+      return () => clearTimeout(timeoutId);
+    }
+  }, []);
+   
+  
+
+  
+
 
   return (
     <>
@@ -259,16 +295,34 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
       <div className="chatOutterWrapper" style={{ padding: showChat ? '0' : '5px', height: showChat ? '100%' : 'fit-content', boxShadow: showChat ? "0 0 10px rgba(0, 0, 0, 0.2)" : "none" }}>
 
         {!showChat ? (
-          <button className='open-chat-button' style={{ padding: '10px', backgroundColor: '#218aff', borderRadius: "100%", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }} onClick={handleOpenChat}>
-            <img style={{ marginTop: 'auto', marginBottom: 'auto' }} width={45} height={45} src='https://amazing-froyo-252e08.netlify.app/chatbot.png' />
-          </button>
+          <> 
+          {!localStorage.getItem('chatBubbleOpened') && (
+            <div className={`chat-bubble-welcome-message ${showChatBubble ? 'show' : ''}`} aria-label="Chat bubble" onClick={handleOpenChat}>
+              {showTypingIndicator && (
+                <div className="typing-indicator">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              )}
+              {showChatBubble && !showTypingIndicator && (
+                <span className="welcome-message">Welcome, can I help you?</span>
+              )}
+            </div>
+          )}
+
+            <button aria-label="Open Chat button" className='open-chat-button' style={{ padding: '10px', backgroundColor: '#218aff', borderRadius: "100%", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }} onClick={handleOpenChat}>
+              <img style={{ marginTop: 'auto', marginBottom: 'auto' }} width={45} height={45} src='https://amazing-froyo-252e08.netlify.app/chatbot.png' alt="chatbot icon"/>
+            </button>
+            
+          </>
         ) : (
           <>
           {showInquiryForm ? (
             <>
               <div style={{ backgroundColor: "white", display: "flex", justifyContent: 'space-between', padding: '5px 15px', borderBottom: 'solid 1px lightgray' }}>
-                <img style={{ padding: '2px', borderRadius: "100%", backgroundColor: '#218aff', marginTop: 'auto', marginBottom: 'auto' }} width={35} height={35} src='https://amazing-froyo-252e08.netlify.app/chatbot.png' />
-                <button className="close-chat-button" onClick={handleCloseChat}>
+                <img style={{ padding: '2px', borderRadius: "100%", backgroundColor: '#218aff', marginTop: 'auto', marginBottom: 'auto' }} width={35} height={35} src='https://amazing-froyo-252e08.netlify.app/chatbot.png' alt="chatbot icon"/>
+                <button   aria-label="Close Chat button" className="close-chat-button" onClick={handleCloseChat}>
                   <span>Close</span>
                 </button>
               </div>
@@ -276,8 +330,8 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
             </>
           ) : (
             <div style={{ backgroundColor: "white", display: "flex", justifyContent: 'space-between', padding: '5px 15px', borderBottom: 'solid 1px lightgray' }}>
-              <img style={{ padding: '2px', borderRadius: "100%", backgroundColor: '#218aff', marginTop: 'auto', marginBottom: 'auto' }} width={35} height={35} src='https://amazing-froyo-252e08.netlify.app/chatbot.png' />
-              <button className="close-chat-button" onClick={handleCloseChat}>
+              <img style={{ padding: '2px', borderRadius: "100%", backgroundColor: '#218aff', marginTop: 'auto', marginBottom: 'auto' }} width={35} height={35} src='https://amazing-froyo-252e08.netlify.app/chatbot.png' alt="chatbot icon"/>
+              <button className="close-chat-button" aria-label="Close Chat button" onClick={handleCloseChat}>
                 <span>Close</span>
               </button>
             </div>

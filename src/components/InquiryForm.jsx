@@ -92,10 +92,10 @@ const InquiryForm = ({ onCloseForm, onChatClosed  }) => {
           />
         </label>
 
-        <button className='form-sbt-btn' type="submit">Submit</button>
+        <button aria-label="submit form inquiry button" className='form-sbt-btn' type="submit">Submit</button>
       </form>
         <div className='fm-cl-btn'>
-            <button className="close-btn-chat-ai" onClick={onCloseForm}>Back to chat</button>
+            <button aria-label="Go back to Chat button" className="close-btn-chat-ai" onClick={onCloseForm}>Back to chat</button>
             <p className='disclaimer-chat-ai-p'>
                 By clicking, you agree to receive marketing emails, text messages, and phone calls and chats are recorded. You may opt-out at anytime.
             </p>

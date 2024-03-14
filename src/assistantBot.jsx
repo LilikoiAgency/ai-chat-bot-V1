@@ -5,10 +5,10 @@ import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 import {MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, Button} from '@chatscope/chat-ui-kit-react'
 import nlp from 'compromise';
 
+// This is used when interacting with Normal models and fine tuned models.
 
 
-
-function App() {
+function AssistantBot() {
   const [showInquiryForm, setShowInquiryForm] = useState(false);
   const [showChat, setShowChat] = useState(() => {
     const storedValue = localStorage.getItem('showChat');
@@ -362,5 +362,5 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
   )
 }
 
-export default App
+export default AssistantBot
  

@@ -24,7 +24,7 @@ function App() {
   const [typing, setTyping] = useState(false);
   const [messages, setMessages] = useState([
     {
-      message: "Hi, I'm Alex, your friendly Assistant! I can help you book a meeting or answer any questions you have regarding our services!",
+      message: "Hey there, I'm Alex, your friendly Assistant. You got a question, I got an answer!",
       sender: "Alex",
     }
   ])

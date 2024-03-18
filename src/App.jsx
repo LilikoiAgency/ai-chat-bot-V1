@@ -21,7 +21,7 @@ function App() {
   const [typing, setTyping] = useState(false);
   const [messages, setMessages] = useState([
     {
-      message: "Hey there, I'm Alex, your friendly Assistant! You got a question, I got",
+      message: "Hey there, I'm Big Bully Turf Ai, your friendly Assistant! Ask me a question!",
       sender: "Alex",
     }
   ])

@@ -10,6 +10,12 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
+
+.cs-message--incoming .cs-message__content{
+  border-radius: 12px !important;
+  background-color: #ededed !important;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

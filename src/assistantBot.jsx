@@ -1,366 +1,140 @@
-import { useState, useEffect } from 'react'
-import InquiryForm from './components/InquiryForm';
-import './App.css' 
-import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
-import {MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, Button} from '@chatscope/chat-ui-kit-react'
-import nlp from 'compromise';
+import React, { useState, useEffect } from 'react';
+import './App.css' ;
+import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
+import {MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, Button} from '@chatscope/chat-ui-kit-react';
+import OpenAI from 'openai';
 
-// This is used when interacting with Normal models and fine tuned models.
-
+export class MessageDto {
+  constructor(content, sender, direction) {
+    this.message = content;
+    this.sender = sender;
+    this.direction = direction;
+  }
+}
 
 function AssistantBot() {
-  const [showInquiryForm, setShowInquiryForm] = useState(false);
-  const [showChat, setShowChat] = useState(() => {
-    const storedValue = localStorage.getItem('showChat');
-    // If storedValue is null (first visit), default to false and update localStorage
-    const initialValue = storedValue === null ? false : storedValue === 'true';
-  
-    if (storedValue === null) {
-      localStorage.setItem('showChat', 'false');
-    }
-    return initialValue;
-  });
-
   const [typing, setTyping] = useState(false);
   const [messages, setMessages] = useState([
     {
-      message: "Hey there, I'm Alex, your friendly Assistant! You got a question, I got an answer!",
-      sender: "Alex",
+      message: "Hi, I am the Big Bully Turf Ai Assistant. How can I help you?",
+      sender: "Assistant",
+      direction: "incoming"
     }
-  ])
-
-  const handleSend = async (message) => {
-    const newMessage = {
-      message: message,
-      sender: "user",
-      direction : "outgoing"
-
-    }
-    const newMessages = [...messages, newMessage]
-    // updeate message state
-    setMessages(newMessages);
-
-    localStorage.setItem('chatMessages', JSON.stringify(newMessages));
-
-
-    // typing indecator
-    setTyping(true);
-
-    function getCurrentDateFormatted() {
-      const options = { month: 'long', day: 'numeric', year: 'numeric' };
-      const formattedDate = new Intl.DateTimeFormat('en-US', options).format(new Date());
-      return formattedDate;
-    }
-    
-    const currentDate = getCurrentDateFormatted();
-    // process messages
-    await processMessageToChatGpt(newMessages, currentDate);
-  }
-
-  // async function processMessageToChatGpt(chatMessages, currentDate) {
-async function processMessageToChatGpt(chatMessages, currentDate) {
-  try {
-      const apiMessages = chatMessages.map((messageObject) => {
-          const role = messageObject.sender === "Gregory the great" ? "assistant" : "user";
-          return { role, content: messageObject.message };
-      });
-
-      // Check if the user's message mentions setting an appointment
-      const userMessage = chatMessages[chatMessages.length - 1].message.toLowerCase();
-      if (containsAppointmentTrigger(userMessage)) {
-          // If the user mentions setting an appointment, generate and send the appointment link
-          const appointmentLink = generateAppointmentLink();
-          const appointmentResponse = `You can schedule your appointment using this link: ${appointmentLink}`;
-
-          setMessages([...chatMessages, { message: appointmentResponse, sender: "Gregory the great" }]);
-          setTyping(false);
-          // setShowAppointmentForm(true);
-          return;
-      }
-
-      const systemMessage = {
-          role: "system",
-          content: `It's ${currentDate}, You are Alex the friendly AI Assistant. You keep all responses under 200 words nice and short. Please ensure you do not give out any exact facts just be brief and informative. If they ask you for to much information tell them to Call Us at <a href="+1"> 1 (800) Get-Help</a>`
-      };
-
-      const apiRequestBody = {
-          model: "gpt-3.5-turbo",
-          messages: [systemMessage, ...apiMessages],
-      };
-
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-              "Authorization": `Bearer ${import.meta.env.VITE_REACT_APP_APP_KEY_TOKEN}`,
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify(apiRequestBody)
-      });
-
-      const data = await response.json();
-      const botMessageContent = data.choices[0].message.content;
-      containsContactInfo(botMessageContent);
-
-      // Save chatbot message to local storage
-      const messagesWithBot = [...chatMessages, { message: botMessageContent, sender: "Alex" }];
-      localStorage.setItem('chatMessages', JSON.stringify(messagesWithBot));
-
-      setMessages(messagesWithBot);
-      setTyping(false);
-  } catch (error) {
-      setMessages([...chatMessages, {
-          message: 'Error communicating with the chatbot',
-          sender: "System"
-      }]);
-      setTyping(false);
-  }
-}
-
-  function containsAppointmentTrigger(userMessage) {
-    // Define keywords or phrases that indicate the intent to schedule an appointment
-    const appointmentTriggers = ["appointment", "set appointment", "book appointment", "consultion"];
-  
-    // Tokenize the user's message
-    const tokens = nlp(userMessage).out('array');
-  
-    // Check if any of the triggers are present in the tokens
-    return appointmentTriggers.some(trigger =>
-      tokens.some(token => token.toLowerCase().includes(trigger))
-    );
-  }
-
-  function generateAppointmentLink() {
-    // Example: This is where the link is generated
-    return '<a href="/contact-us/" target="_blank" rel="noopener">Schedule your appointment</a>';
-  }
-
-  function containsContactInfo(botMessage) {
-    // Regular expression to match the contact information
-    const regex = /Name:\s*(.*?),\s*Email:\s*(.*?),\s*Phone:\s*(.*?),\s*Date:\s*(.*?),\s*Time:\s*(.*?)\./i;
-    const regex2 = /Name: (.*)\nEmail: (.*)\nPhone: (.*)\nDate: (.*)\nTime: (.*)/;
-    // Attempt to match the regular expression
-    const match = botMessage.match(regex);
-    const match2 = botMessage.match(regex2);
-    // Check if there's a match
-    if (match) {
-      const [, name, email, phone, date, time] = match; // Destructure the matched groups
-      name.replace(/\n/g, '').trim();
-      email.replace(/\n/g, '').trim();
-      phone.replace(/\n/g, '').trim();
-      date.replace(/\n/g, '').trim();
-      time.replace(/\n/g, '').trim();
-      
-      const contactInfo = { name, email, phone, date, time };
-      postToWebhook(contactInfo);
-      return true;
-    } else if (match2){
-      const [, name, email, phone, date, time] = match2; // Destructure the matched groups
-      name.replace(/\n/g, '').trim();
-      email.replace(/\n/g, '').trim();
-      phone.replace(/\n/g, '').trim();
-      date.replace(/\n/g, '').trim();
-      time.replace(/\n/g, '').trim();
-      
-      const contactInfo = { name, email, phone, date, time };
-      postToWebhook(contactInfo);
-      return true;
-    }
-    // No match found
-    return false;
-  }
-
-  async function postToWebhook(contactInfo) {
-    // try {
-    //   const webhookUrl = 'https://hooks.zapier.com/hooks/catch/807991/3fuqflw/'; // Replace with your actual webhook URL
-    //   const response = await fetch(webhookUrl, {
-    //     method: 'POST',
-    //     mode: 'cors',
-    //     body: JSON.stringify(contactInfo),
-    //   });
-  
-    //   if (response.ok) {
-    //     console.log('Contact information sent to webhook successfully.');
-    //   } else {
-    //     console.error('Failed to send contact information to webhook.');
-    //   }
-    // } catch (error) {
-    //   console.error('Error posting to webhook:', error, JSON.stringify(contactInfo));
-    // }
-  }
-
-  const handleCloseChat = () => {
-    setShowChat(false);
-    localStorage.setItem('showChat', 'false');
-  };
-
-  const handleOpenChat = () => {
-    setShowChat(true);
-    setShowChatBubble(false);
-    localStorage.setItem('showChat', 'true');
-    localStorage.setItem('chatBubbleOpened', 'true');
-  };
-
-  const toggleInquiryForm = () => {
-    setShowInquiryForm((prev) => !prev);
-  };
+  ]);
+  const [openai, setOpenai] = useState(null);
+  const [thread, setThread] = useState(null);
+  const [assistant, setAssistant] = useState(null);
+  const [input, setInput] = useState("");
 
   
-  const presetMessages = [
-    "Book appointment",
-    "Submit Inquiry"
-  ];
-
-  const initialShowPresetMessages = sessionStorage.getItem('showPresetMessages') !== 'false';
-  const [showPresetMessages, setShowPresetMessages] = useState(initialShowPresetMessages);
-
-  const handlePresetMessageClick = (presetMessage) => {
-
-    if (presetMessage === 'Submit Inquiry') {
-      toggleInquiryForm();
-    } else {
-      handleSend(presetMessage);
-    }
-    // Update the showPresetMessages state to remove the clicked message
-    setShowPresetMessages(false);
-  
-    // Use sessionStorage to store the updated value of showPresetMessages
-    sessionStorage.setItem('showPresetMessages', JSON.stringify(false));
-  };
-  
-  const renderPresetMessages = () => {
-    return showPresetMessages ? (
-      <div className="preset-holder">
-        {presetMessages.map((presetMessage, index) => (
-          <button key={index} onClick={() => handlePresetMessageClick(presetMessage)}>
-            {presetMessage}
-          </button>
-        ))}
-      </div>
-    ) : null;
-  };
   useEffect(() => {
-    const storedValue = localStorage.getItem('showChat');
-    setShowChat(storedValue ? JSON.parse(storedValue) : true);
-  
-    const storedMessages = localStorage.getItem('chatMessages');
-    if (storedMessages) {
-      setMessages(JSON.parse(storedMessages));
-    }
-  
-    // Retrieve the initialShowPresetMessages value from sessionStorage
-    const initialShowPresetMessages = sessionStorage.getItem('showPresetMessages');
-  
-    // Set showPresetMessages to false if it's not found in sessionStorage
-    setShowPresetMessages(initialShowPresetMessages ? JSON.parse(initialShowPresetMessages) : []);
+    initChatBot();
   }, []);
 
-  
-  const [showChatBubble, setShowChatBubble] = useState(false);
-  const [showTypingIndicator, setShowTypingIndicator] = useState(false);
-
   useEffect(() => {
-    // Check if the chat bubble has been opened during this session
-    const hasBubbleBeenOpened = localStorage.getItem('chatBubbleOpened');
-    
-    // Check if the typing animation has been shown during this session
-    const hasTypingAnimationBeenShown = sessionStorage.getItem('typingAnimationShown');
-
-    // If the bubble hasn't been opened and the typing animation hasn't been shown, proceed
-    if (!hasBubbleBeenOpened && !hasTypingAnimationBeenShown) {
-      const timeoutId = setTimeout(() => {
-        setShowChatBubble(true);
-        setShowTypingIndicator(true);
-
-        const typingIndicatorTimeout = setTimeout(() => {
-          setShowTypingIndicator(false);
-          sessionStorage.setItem('typingAnimationShown', 'true');
-        }, 1500);
-
-        return () => clearTimeout(typingIndicatorTimeout);
-      }, 3000);
-
-      // Clear the timeout to prevent showing the chat bubble if the component is unmounted
-      return () => clearTimeout(timeoutId);
+    if (assistant) {
+      console.log("Assistant is live");
     }
-  }, []);
-   
+  }, [assistant]);
+
+  const initChatBot = async () => {
+    const openai = new OpenAI({
+      apiKey: import.meta.env.VITE_REACT_APP_APP_KEY_TOKEN,
+      dangerouslyAllowBrowser: true,
+    });
+
+    // Create an assistant
+    const assistant = await openai.beta.assistants.retrieve(`${import.meta.env.VITE_REACT_APP_ASST_API_ID}`);
+    // await openai.beta.assistants.create({
+    //   name: "Hockey Expert",
+    //   instructions: "You are a hockey expert. You specialize in helping others learn about hockey.",
+    //   tools: [{ type: "code_interpreter" }],
+    //   model: "gpt-3.5-turbo",
+    // });
+
+    // Create a thread
+    const thread = await openai.beta.threads.create();
+    setOpenai(openai);
+    setAssistant(assistant);
+    setThread(thread);
+  };
+
+  const createNewMessage = (content, isUser) => {
+    
+    const direction = isUser ? "outgoing" : "incoming";
+    const sender = direction === "outgoing" ? "user" : "Assistant";
+    return new MessageDto(content, sender, direction);
+  };
+
+  const handleSend = async (element) => {
+
+    console.log(element);
+
+  
+    // Add the user message to the messages array
+    const userMessage = createNewMessage(element, true);
+    setMessages(prevMessages => [...prevMessages, userMessage]);
+  
+    // Clear the input field
+    setInput("");
+  
+    // Send a message to the thread
+    await openai.beta.threads.messages.create(thread.id, {
+      role: "user",
+      content: element,
+    });
+  
+    // Run the assistant
+    const run = await openai.beta.threads.runs.create(thread.id, {
+      assistant_id: assistant.id,
+    });
+  
+    // Create a response
+    let response = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+  
+    // Wait for the response to be ready
+    while (response.status === "in_progress" || response.status === "queued") {
+      console.log("waiting...");
+      setTyping(true);
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      response = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+    }
+  
+    setTyping(false);
+  
+    // Get the messages for the thread
+    const messageList = await openai.beta.threads.messages.list(thread.id);
+  
+    // Find the last message for the current run
+    const lastMessage = messageList.data
+      .filter((message) => message.run_id === run.id && message.role === "assistant")
+      .pop();
+  
+    // Print the last message coming from the assistant
+    if (lastMessage) {
+      console.log(messages);
+      setMessages(prevMessages => [...prevMessages, createNewMessage(lastMessage.content[0]["text"].value, false)]);
+    }
+  };
 
   return (
     <>
-    <div className="App">
-      <div className={`chatOutterWrapper ${showChat ? 'mobile-chat' : ''}`} style={{ padding: showChat ? '0' : '5px', height: showChat ? '100%' : 'fit-content', boxShadow: showChat ? "0 0 10px rgba(0, 0, 0, 0.2)" : "none" }}>
-
-        {!showChat ? (
-          <> 
-          {!localStorage.getItem('chatBubbleOpened') && (
-            <div className={`chat-bubble-welcome-message ${showChatBubble ? 'show' : ''}`} aria-label="Chat bubble" onClick={handleOpenChat}>
-              {showTypingIndicator && (
-                <div className="typing-indicator">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              )}
-              {showChatBubble && !showTypingIndicator && (
-                <span className="welcome-message">Welcome, can I help you?</span>
-              )}
-            </div>
-          )}
-
-            <button aria-label="Open Chat button" className='open-chat-button' style={{ padding: '10px', backgroundColor: '#218aff', borderRadius: "100%", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }} onClick={handleOpenChat}>
-              <img style={{ marginTop: 'auto', marginBottom: 'auto' }} width={45} height={45} src='https://amazing-froyo-252e08.netlify.app/chatbot.png' alt="chatbot icon"/>
-            </button>
-            
-          </>
-        ) : (
-          <>
-          {showInquiryForm ? (
-            <>
-              <div style={{ backgroundColor: "white", display: "flex", justifyContent: 'space-between', padding: '5px 15px', borderBottom: 'solid 1px lightgray' }}>
-                <img style={{ padding: '2px', borderRadius: "100%", backgroundColor: '#218aff', marginTop: 'auto', marginBottom: 'auto' }} width={35} height={35} src='https://amazing-froyo-252e08.netlify.app/chatbot.png' alt="chatbot icon"/>
-                <button   aria-label="Close Chat button" className="close-chat-button" onClick={handleCloseChat}>
-                  <span>Close</span>
-                </button>
-              </div>
-              <InquiryForm onCloseForm={toggleInquiryForm} onChatClosed={handleCloseChat} />
-            </>
-          ) : (
-            <div style={{ backgroundColor: "white", display: "flex", justifyContent: 'space-between', padding: '5px 15px', borderBottom: 'solid 1px lightgray' }}>
-              <img style={{ padding: '2px', borderRadius: "100%", backgroundColor: '#218aff', marginTop: 'auto', marginBottom: 'auto' }} width={35} height={35} src='https://amazing-froyo-252e08.netlify.app/chatbot.png' alt="chatbot icon"/>
-              <button className="close-chat-button" aria-label="Close Chat button" onClick={handleCloseChat}>
-                <span>Close</span>
-              </button>
-            </div>
-          )}
-
-            {!showInquiryForm && (
-              <MainContainer>
-                <ChatContainer>
-                  <MessageList typingIndicator={typing ? <TypingIndicator content="Alex AI Assistant" /> : null}>
-                    {messages.map((message, i) => (
-                      <Message key={i} model={message} content={message.message} />
-                    ))}
-                  </MessageList>
-                  <div as={MessageInput} style={{
-                    display: "flex",
-                    flexDirection: "column",
-                  }}>
-                    <div className='preset-holder' >
-                      {renderPresetMessages()}
-                    </div>
-                    <MessageInput attachButton={false} placeholder='Type Message' onSend={handleSend} />
-                  </div>
-
-                </ChatContainer>
-              </MainContainer>
-            )}
-          </>
-        )}
-      </div>
+    <a href='/'> OpenAi API Chat </a>
+    <div className="App assistant-wrap">
+      <h1 style={{textAlign:'center'}}> BBT Assistant Ai </h1>
+      <MainContainer>
+        <ChatContainer>
+            <MessageList typingIndicator={typing ? <TypingIndicator content="Big Bully Turf AI Assistant" /> : null}>
+              {messages.map((message, i) => (
+                <Message key={i} model={message} content={message.content} />
+              ))}
+            </MessageList>
+            <MessageInput attachButton={false} placeholder='Type Message' onSend={handleSend} />
+        </ChatContainer>
+      </MainContainer>
     </div>
-  </>
-  )
+    </>
+  );
 }
 
-export default AssistantBot
- 
+export default AssistantBot;

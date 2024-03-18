@@ -241,3 +241,8 @@
     margin: auto;
   }
 }
+
+.cs-message--incoming .cs-message__content{
+  border-radius: 12px !important;
+  background-color: #ededed !important;
+}

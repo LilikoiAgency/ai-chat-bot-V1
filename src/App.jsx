@@ -5,9 +5,6 @@ import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 import {MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, Button} from '@chatscope/chat-ui-kit-react'
 import nlp from 'compromise';
 
-
-
-
 function App() {
   const [showInquiryForm, setShowInquiryForm] = useState(false);
   const [showChat, setShowChat] = useState(() => {
@@ -24,7 +21,7 @@ function App() {
   const [typing, setTyping] = useState(false);
   const [messages, setMessages] = useState([
     {
-      message: "Hey there, I'm Alex, your friendly Assistant! You got a question, I got an answer!",
+      message: "Hey there, I'm Alex, your friendly Assistant! You got a question, I got",
       sender: "Alex",
     }
   ])
@@ -80,7 +77,7 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
 
       const systemMessage = {
           role: "system",
-          content: `It's ${currentDate}, You are Alex the friendly AI Assistant. You keep all responses under 200 words nice and short. Please ensure you do not give out any exact facts just be brief and informative. If they ask you for to much information tell them to Call Us at <a href="+1"> 1 (800) Get-Help</a>`
+          content: `It's ${currentDate}, Big Bully Turf Web Chat communicates in the brand voice of Big Bully Turf, focusing on being friendly and professional, akin to a helpful receptionist. It's knowledgeable about the company's offerings, specifically residential turf, putting greens, and hardscape projects, exclusively in California (San Diego, Inland Empire, and Orange County) and Las Vegas. The chatbot clarifies that these are the current service areas and that locations outside of these areas are outside of the service area. Big Bully Turf does not offer services for football or other sports fields. The chatbot uses the company's website information and the recently updated "11 09 23 BBT LV Pitchbook" file to respond to technical questions and can direct users to specific web pages for more details on employment opportunities or updates on existing jobs. It collects contact information for follow-up on queries it can't immediately answer or for unhappy customers, providing a direct contact number for urgent assistance. In every interaction, Big Bully Turf Web Chat prioritizes personalized, relevant responses, ensuring each user feels heard and supported. It seeks user consent before collecting personal information and is clear about its limitations in making sales or providing real-time updates, focusing instead on guiding users towards informed decisions or the appropriate next steps for their inquiries. It now references updated warranty information detailing a 25-year material warranty and a 4-year labor warranty for its artificial turf installations.`
       };
 
       const apiRequestBody = {
@@ -358,6 +355,8 @@ async function processMessageToChatGpt(chatMessages, currentDate) {
         )}
       </div>
     </div>
+    <a href='/assistant-api'>Open Assistant API Chat </a>
+
   </>
   )
 }
